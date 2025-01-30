@@ -3,7 +3,7 @@
 # Designer: DogeBoy2
 # Copyright HrotonStudio 2025
 
-from Main import Ui_MainWindow
+from Demo import Ui_MainWindow
 from PySide6.QtWidgets import QApplication,QWidget
 from qframelesswindow import FramelessWindow,AcrylicWindow
 from qfluentwidgets import SplitFluentWindow,fluent_window
