@@ -144,10 +144,10 @@ class Ui_MainWindow(object):
         self.MaxMemLabel.setText(_translate("MainWindow", "最大内存："))
         self.CaptionLabel_2.setText(_translate("MainWindow", "MB"))
         self.MemTitle.setText(_translate("MainWindow", "内存设置"))
-        self.MaxMemText.setText(_translate("MainWindow", "4"))
+        self.MaxMemText.setText(_translate("MainWindow", ""))
         self.MinMemLabel.setText(_translate("MainWindow", "最小内存："))
         self.CaptionLabel_4.setText(_translate("MainWindow", "MB"))
-        self.MinMemText.setText(_translate("MainWindow", "2"))
+        self.MinMemText.setText(_translate("MainWindow", ""))
         self.JVMSettingTitle.setText(_translate("MainWindow", "JVM设置"))
         self.CoreListTitle.setText(_translate("MainWindow", "服务端版本选择"))
         self.CloseButton.setText(_translate("MainWindow","×"))
@@ -173,8 +173,15 @@ def redirect_output(console_window):
     sys.stderr = console_window
 
 # 修改 StartServer 函数以使用新的 ConsoleWindow
-def StartServer(MaximumMemory:int, MinimumMemory:int, CoreFileNameJar:str):
+def StartServer(MaximumMemory, MinimumMemory, CoreFileNameJar:str):
     # 创建并显示控制台窗口
+    MaximumMemory = str(MaximumMemory)
+    MinimumMemory = str(MinimumMemory)
+    print(MaximumMemory)
+    print(MinimumMemory)
+    print(type(MaximumMemory))
+    print(type(MinimumMemory))
+    
     try:
         console_window = ConsoleWindow()
         console_window.show()
@@ -190,13 +197,10 @@ def StartServer(MaximumMemory:int, MinimumMemory:int, CoreFileNameJar:str):
         
         # 使用 subprocess.Popen 代替 os.system 以实现实时输出重定向
         os.system("java -version")
+
         process = QtCore.QProcess()
         process.setProgram("java")
-        process.setArguments([
-    "-Xmx", f"{MaximumMemory}MB",
-    "-Xms", f"{MinimumMemory}MB",
-    "-jar", CoreFileNameJar,
-    "-Dcom.mojang.eula.agree=true"])
+        process.setArguments(["-Xmx%sM" % MaximumMemory,"-Xms%sM" % MinimumMemory,"-jar", CoreFileNameJar])
         process.readyReadStandardOutput.connect(lambda: console_window.text_browser.append(process.readAllStandardOutput().data().decode()))
         process.readyReadStandardError.connect(lambda: console_window.text_browser.append(process.readAllStandardError().data().decode()))
         process.start()
